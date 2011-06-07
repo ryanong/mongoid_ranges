@@ -1,0 +1,8 @@
+require 'mongoid'
+require 'active_support/concern'
+require 'mongoid_ranges/criterion/complex'
+require 'mongoid_ranges/criterion/in_range'
+require 'mongoid_ranges/extensions/hash/criteria_helpers'
+require 'mongoid_ranges/extensions/symbol/inflections'
+require 'mongoid_ranges/ranges'
+require 'mongoid_ranges/ranges_document'

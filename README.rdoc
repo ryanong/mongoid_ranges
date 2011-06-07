@@ -2,6 +2,42 @@
 
 Description goes here.
 
+== Usage
+
+    class Store
+      include Mongoid::Document
+      include Mongoid::Ranges
+
+      field :name, :type => String
+      embeds_many :business_hours
+    end
+    
+    class BusinessHours
+      include Mongoid::Document
+      include Mongoid::RangesDocument
+      
+      embeded_in :store
+      
+      loop_range 1.week.to_i #optional only if you want to loop info
+      
+    end
+
+    bobs = Store.new(:name => 'Bob's Bodega')
+
+    start_time = 9 + (30/60.0) # 9:30 am
+    end_time = 18 + (45/60.0) # 6:30 pm
+
+    5.times do |day|
+      range_start = day.days.to_i
+
+      bobs.business_hours.create :states =>[:open],  :start => range_start + start_time, :end => range_start + end_time
+    end
+
+    time = Time.now
+    time = time - time.beginning_of_week
+    Store.where(:business_hours.in_range(:open) => time)
+    Store.where(:business_hours.in_range(:open) => {:day => :monday})
+
 == Contributing to mongoid_ranges
  
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
