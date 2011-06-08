@@ -3,5 +3,5 @@ class Store
   include Mongoid::Ranges
 
   field :name, :type => String
-  embeds_many :hours
+  embeds_ranges :hours
 end

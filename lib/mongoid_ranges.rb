@@ -1,5 +1,6 @@
 require 'mongoid'
 require 'active_support/concern'
+require 'active_support/core_ext/time/calculations'
 require 'mongoid_ranges/criterion/complex'
 require 'mongoid_ranges/criterion/in_range'
 require 'mongoid_ranges/extensions/hash/criteria_helpers'

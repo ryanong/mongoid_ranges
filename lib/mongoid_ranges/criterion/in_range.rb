@@ -10,7 +10,7 @@ module Mongoid #:nodoc:
     # becomes:
     # <tt> { :field.lt => "value }</tt>
     class InRange
-      attr_accessor :key, :operator, :states
+      attr_accessor :key, :operator, :state
 
       # Create the new complex criterion.
       def initialize(opts = {})
@@ -18,26 +18,26 @@ module Mongoid #:nodoc:
         @operator = '$elemMatch'
       end
 
-      def make_hash v
-        {
+      def to_query v
+        query = {
           '$elemMatch' => {
             '$or' => [{
-              :states => @state,
               :start  => {'$lte' => v},
               :end    => {'$gte' => v},
               :wrap   => false
             },{
-              :states => @state,
               :start  => {'$gte' => v},
               :end    => {'$lte' => v},
               :wrap   => true
             }]
           }
         }
+        query['$elemMatch']['$or'].map! {|o| o[:states] = @state; o} unless @state.nil?
+        query
       end
 
       def hash
-        [@key,@operator,@states].hash
+        [@key,@operator,@state].hash
       end
 
       def eql?(other)
@@ -46,7 +46,7 @@ module Mongoid #:nodoc:
 
       def ==(other)
         return false unless other.is_a?(self.class)
-        self.key == other.key && self.operator == other.operator && self.states == other.states
+        self.key == other.key && self.operator == other.operator && self.state == other.state
       end
     end
   end

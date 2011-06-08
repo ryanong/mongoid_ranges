@@ -18,7 +18,8 @@ Description goes here.
       
       embeded_in :store
       
-      loop_range 1.week.to_i #optional only if you want to loop info
+      # set the limit of end. This will automaticaly put start and end within the correct bounds
+      set_loop_range 1.week.to_i
       
     end
 
@@ -36,7 +37,6 @@ Description goes here.
     time = Time.now
     time = time - time.beginning_of_week
     Store.where(:business_hours.in_range(:open) => time)
-    Store.where(:business_hours.in_range(:open) => {:day => :monday})
 
 == Contributing to mongoid_ranges
  
