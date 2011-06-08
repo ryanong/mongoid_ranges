@@ -15,10 +15,13 @@ describe "Mongoid Ranges" do
     bobs.save
   end
 
-  it "create valid selectors" do
+  it "should create valid selectors" do
     time = 3.days.to_i+12.hours.to_i
     Store.where(:hours.in_range('open') => time).selector[:hours]["$elemMatch"].should_not be_empty
-    Store.where(:hours.in_range('open') => time).count.should > 0
   end
   
+  it "should find at least one store" do
+    time = 3.days.to_i+12.hours.to_i
+    Store.where(:hours.in_range('open') => time).count.should > 0
+  end
 end

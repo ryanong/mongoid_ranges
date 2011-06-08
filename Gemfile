@@ -2,6 +2,8 @@ source "http://rubygems.org"
 # Add dependencies required to use your gem here.
 # Example:
 #   gem "activesupport", ">= 2.3.5"
+gem "bson",           '>= 1.3',  :platforms => :jruby # for non jruby apps, require bson_ext in your Gemfile to boost performance
+gem "bson_ext",       '>= 1.3',  :platforms => :mri
 gem 'mongoid'
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
