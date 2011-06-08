@@ -25,17 +25,17 @@ module Mongoid #:nodoc:
         end
         embeds_many *args
         define_method("in_range_of_#{model}") do |*args|
-          self.in_range_of_model(model,*args)
+          self.in_range_of(model,*args)
         end
       end
 
-      def in_range_of_model(model,number,state = nil)
+      def in_range_of(model,number,state = nil)
         where(model.to_sym.in_range(state) => number)
       end
 
-      def time_in_range_of_model(model,time, state = nil)
+      def time_in_range_of(model,time, state = nil)
         number = time.to_i - time.beginning_of_week.to_i
-        in_range_of_model(model,state,number)
+        in_range_of(model,state,number)
       end
     end
 

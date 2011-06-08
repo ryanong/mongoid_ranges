@@ -25,7 +25,7 @@ module Mongoid #:nodoc:
 
       def set_loop_range(range)
         raise 'loop range must be a fixnum' unless range.kind_of? Fixnum
-        @@loop_range = range
+        define_method(:loop_range) { range }
         validates_numericality_of :end, :less_than_or_equal_to => @@loop_range
         before_validation :fix_looping
       end
@@ -39,8 +39,8 @@ module Mongoid #:nodoc:
       end
 
       def fix_looping
-        self.start  = (self.start > 0)  ? self.start % @@loop_range : -1*(self.start % @@loop_range)
-        self.end    = (self.end > 0)    ? self.end % @@loop_range   : -1*(self.end % @@loop_range)
+        self.start  = (self.start > 0)  ? self.start % self.class.loop_range : -1*(self.start % self.class.loop_range)
+        self.end    = (self.end > 0)    ? self.end % self.class.loop_range   : -1*(self.end % self.class.loop_range)
       end
     end 
   end
