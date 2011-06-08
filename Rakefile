@@ -17,8 +17,8 @@ Jeweler::Tasks.new do |gem|
   gem.name = "mongoid_ranges"
   gem.homepage = "http://github.com/ryanong/mongoid_ranges"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{Simplify searching ranges or repeatable events in mongoid. Such as store hours or repeating dates}
+  gem.description = %Q{Simplify searching ranges or repeatable events in mongoid. Such as store hours or repeating dates}
   gem.email = "ryanong@gmail.com"
   gem.authors = ["Ryan Ong"]
   # dependencies defined in Gemfile
