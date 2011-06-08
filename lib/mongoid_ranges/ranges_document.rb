@@ -11,6 +11,13 @@ module Mongoid #:nodoc:
       field :wrap     ,:type => Boolean
 
       before_save :check_for_wrapping
+
+      if respond_to?(:per_page)
+        raise 'loop range must be a fixnum' unless per_page.kind_of? Fixnum
+        validates_numericality_of :end, :less_than_or_equal_to => per_page
+        before_validation :fix_looping
+      end
+
     end
 
     module ClassMethods
@@ -22,14 +29,6 @@ module Mongoid #:nodoc:
       def in_range?(number, state = nil)
         self.in_range(state,number).count > 0
       end
-
-      def set_loop_range(range)
-        raise 'loop range must be a fixnum' unless range.kind_of? Fixnum
-        define_method(:loop_range) { range }
-        validates_numericality_of :end, :less_than_or_equal_to => range
-        before_validation :fix_looping
-      end
-
     end
 
     module InstanceMethods
