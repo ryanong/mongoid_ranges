@@ -10,7 +10,7 @@ describe "Mongoid Ranges" do
     5.times do |day|
       range_start = day.days.to_i
 
-      bobs.hours.create :states =>['open'],  :start => range_start + start_time, :end => range_start + end_time
+      bobs.hours.create :states =>['open'], :start => range_start + start_time, :end => range_start + end_time
     end
     bobs.save
   end
