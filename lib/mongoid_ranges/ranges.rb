@@ -23,19 +23,19 @@ module Mongoid #:nodoc:
           args[1].delete(:index)
           index_ranges model
         end
-
+        self.module_eval <<-EOT
         set_callback(:save,:before) do |document|
-          document.send(model).all.each do |range|
+          document.#{model}.all.each do |range|
             range.run_callbacks :save
           end
         end
         
         set_callback(:validation,:before) do |document|
-          document.send(model).all.each do |range|
+          document.#{model}.all.each do |range|
             range.run_callbacks :validation
           end
         end
-
+        EOT
         embeds_many *args
         define_method("in_range_of_#{model}") do |*args|
           self.in_range_of(model,*args)
@@ -54,9 +54,9 @@ module Mongoid #:nodoc:
     end
 
     module InstanceMethods
-      def group_hours(names)
+      def group_ranges(klass, names)
         group = {}
-        interval = DealershipHours.loop_range / names.size
+        interval = klass.loop_range / names.size
         hours.each do |range|
           range_start = range.start % interval
           range_end   = range.end % interval
