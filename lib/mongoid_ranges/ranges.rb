@@ -23,19 +23,19 @@ module Mongoid #:nodoc:
           args[1].delete(:index)
           index_ranges model
         end
-        self.module_eval <<-EOT
+
         set_callback(:save,:before) do |document|
-          document.#{model}.all.each do |range|
+          document.send(model).all.each do |range|
             range.run_callbacks :save
           end
         end
         
         set_callback(:validation,:before) do |document|
-          document.#{model}.all.each do |range|
+          document.send(model).all.each do |range|
             range.run_callbacks :validation
           end
         end
-        EOT
+
         embeds_many *args
         define_method("in_range_of_#{model}") do |*args|
           self.in_range_of(model,*args)
