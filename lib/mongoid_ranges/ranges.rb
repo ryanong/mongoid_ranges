@@ -50,9 +50,10 @@ module Mongoid #:nodoc:
 
     module InstanceMethods
       def group_ranges(klass, names)
+        klass = self.send(klass) unless klass.kind_of? Array
         group = {}
         interval = klass.loop_range / names.size
-        hours.each do |range|
+        klass.each do |range|
           range_start = range.start % interval
           range_end   = range.end % interval
           hash = (range_start.to_s+range_end.to_s+range.states.join)
@@ -66,7 +67,7 @@ module Mongoid #:nodoc:
             group[hash][:ranges] << range
             group[hash][:end_name] = names[(range.end / interval).to_i]
         end
-        group
+        group.values
       end
     end 
   end
