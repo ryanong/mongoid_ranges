@@ -23,6 +23,19 @@ module Mongoid #:nodoc:
           args[1].delete(:index)
           index_ranges model
         end
+
+        set_callback(:save,:before) do |document|
+          document.send(model).all.each do |range|
+            range.run_callbacks :save
+          end
+        end
+        
+        set_callback(:validation,:before) do |document|
+          document.send(model).all.each do |range|
+            range.run_callbacks :validation
+          end
+        end
+
         embeds_many *args
         define_method("in_range_of_#{model}") do |*args|
           self.in_range_of(model,*args)
@@ -37,10 +50,29 @@ module Mongoid #:nodoc:
         number = time.to_i - time.beginning_of_week.to_i
         in_range_of(model,state,number)
       end
+
     end
 
     module InstanceMethods
-
+      def group_hours(names)
+        group = {}
+        interval = DealershipHours.loop_range / names.size
+        hours.each do |range|
+          range_start = range.start % interval
+          range_end   = range.end % interval
+          hash = (range_start.to_s+range_end.to_s+range.states.join)
+          group[hash] ||= {
+            :start      => range_start,
+            :end        => range_end,
+            :start_name => names[(range.start.to_i / interval).to_i],
+            :end_name   => names[(range.end.to_i / interval).to_i],
+            :states     => range.states,
+            :ranges     => []}
+            group[hash][:ranges] << range
+            group[hash][:end_name] = names[(range.end / interval).to_i]
+        end
+        group
+      end
     end 
   end
 end
