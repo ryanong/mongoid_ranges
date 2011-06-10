@@ -24,4 +24,27 @@ describe "Mongoid Ranges" do
     time = 3.days.to_i+12.hours.to_i
     Store.where(:hours.in_range('open') => time).count.should > 0
   end
+
+  it "should fix wrap check" do
+    hash = {
+      :name => 'Joe pizza',
+      :hours => [
+        {'states' =>['open'], 'start' => 20, 'end' => 50},
+        {'states' =>['open'], 'start' => 60, 'end' => 70},
+        {'states' =>['wrap'], 'start' => 90, 'end' => 30},
+        {'states' =>['wrap'], 'start' => 90, 'end' => 10},
+      ]
+    }
+    joes = Store.new
+    joes.attributes = hash
+    joes.save
+    joe_new = Store.find(joes.id)
+    joe_new.hours.each do |hour|
+      if hour.states.first == 'open'
+        hour.wrap.should == false
+      else
+        hour.wrap.should == true
+      end
+    end
+  end
 end

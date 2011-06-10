@@ -26,13 +26,13 @@ module Mongoid #:nodoc:
 
         set_callback(:save,:before) do |document|
           document.send(model).all.each do |range|
-            range.run_callbacks :save
+            range.check_for_wrapping
           end
         end
         
         set_callback(:validation,:before) do |document|
           document.send(model).all.each do |range|
-            range.run_callbacks :validation
+            range.valid?
           end
         end
 
@@ -44,11 +44,6 @@ module Mongoid #:nodoc:
 
       def in_range_of(model,number,state = nil)
         where(model.to_sym.in_range(state) => number)
-      end
-
-      def time_in_range_of(model,time, state = nil)
-        number = time.to_i - time.beginning_of_week.to_i
-        in_range_of(model,state,number)
       end
 
     end
